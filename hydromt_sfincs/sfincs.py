@@ -501,7 +501,8 @@ class SfincsModel(GridModel):
             if np.any(da_mask >= 1):
                 self.logger.info("Derive region geometry based on active cells.")
                 # make mask with ones and zeros only -> vectorize ones
-                region = da_mask.where(da_mask <= 1, 1).raster.vectorize()
+                da_mask.values[da_mask.values > 1] = 1
+                region = da_mask.raster.vectorize()
                 if region.empty:
                     raise ValueError("No region found.")
                 self.set_geoms(region, "region")
