@@ -248,11 +248,11 @@ def burn_river_rect(
     # make sure the river is at least one cell wide
     res = abs(da_elv.raster.res[0])
     if rivwth_name in gdf_riv.columns:
-        gdf_riv["buf"] = np.maximum(gdf_riv[rivwth_name].fillna(2), res) / 2
+        buffer = np.maximum(gdf_riv[rivwth_name].fillna(2), res) / 2
     else:
-        gdf_riv["buf"] = res / 2
+        buffer = res / 2
     if gdf_riv_mask is None:
-        gdf_riv_mask = gdf_riv.assign(geometry=gdf_riv.buffer(gdf_riv["buf"]))
+        gdf_riv_mask = gdf_riv.assign(geometry=gdf_riv.buffer(buffer))
     else:
         # get gdf_riv outside of mask and buffer these lines
         # then merge with gdf_riv_mask to get the full river mask
