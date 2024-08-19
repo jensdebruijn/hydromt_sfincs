@@ -8,7 +8,7 @@ from hydromt.gis_utils import nearest, parse_crs
 from scipy import ndimage
 from scipy.interpolate import interp1d
 from shapely.geometry import LineString, MultiLineString, MultiPoint, Point
-from shapely.ops import linemerge, snap, split, unary_union
+from shapely.ops import linemerge, snap, split, union_all()
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ def _line_to_points(line: LineString, dist: float = None, n: int = None) -> Mult
         distances = np.linspace(0, line.length, n)
     else:
         ValueError('Either "dist" or "n" should be provided')
-    points = unary_union(line.interpolate(distances))
+    points = union_all()(line.interpolate(distances))
     return points
 
 
@@ -257,7 +257,7 @@ def burn_river_rect(
         # get gdf_riv outside of mask and buffer these lines
         # then merge with gdf_riv_mask to get the full river mask
         gdf_mask = gpd.GeoDataFrame(
-            geometry=[gdf_riv_mask.buffer(0).unary_union],
+            geometry=[gdf_riv_mask.buffer(0).union_all()],
             crs=gdf_riv_mask.crs,
         )  # create single polygon to clip
         gdf_riv_clip = gdf_riv.overlay(gdf_mask, how="difference")
@@ -318,7 +318,7 @@ def burn_river_rect(
     # merge river lines > z points are interpolated along merged line
     if gdf_riv.index.size > 1:
         gdf_riv_merged = gpd.GeoDataFrame(
-            geometry=[linemerge(gdf_riv.unary_union)], crs=gdf_riv.crs
+            geometry=[linemerge(gdf_riv.union_all())], crs=gdf_riv.crs
         )
         gdf_riv_merged = gdf_riv_merged.explode(index_parts=True).reset_index(drop=True)
     else:
