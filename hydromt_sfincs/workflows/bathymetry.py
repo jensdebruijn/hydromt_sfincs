@@ -62,7 +62,7 @@ def _line_to_points(line: LineString, dist: float = None, n: int = None) -> Mult
         distances = np.linspace(0, line.length, n)
     else:
         ValueError('Either "dist" or "n" should be provided')
-    points = union_all()(line.interpolate(distances))
+    points = unary_union(line.interpolate(distances))
     return points
 
 
