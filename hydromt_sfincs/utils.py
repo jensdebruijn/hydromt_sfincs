@@ -221,7 +221,7 @@ def read_xy(fn: Union[str, Path], crs: Union[int, CRS] = None) -> gpd.GeoDataFra
 
 
 def read_xyn(fn: str, crs: int = None):
-    df = pd.read_csv(fn, index_col=False, header=None, delim_whitespace=True).rename(
+    df = pd.read_csv(fn, index_col=False, header=None, sep='\s+').rename(
         columns={0: "x", 1: "y"}
     )
     if len(df.columns) > 2:
@@ -280,7 +280,7 @@ def read_timeseries(fn: Union[str, Path], tref: Union[str, datetime]) -> pd.Data
         Dataframe of timeseries with parsed time index.
     """
     tref = parse_datetime(tref)
-    df = pd.read_csv(fn, delim_whitespace=True, index_col=0, header=None)
+    df = pd.read_csv(fn, sep='\s+', index_col=0, header=None)
     df.index = pd.to_datetime(df.index.values, unit="s", origin=tref)
     df.columns = df.columns.values.astype(int)
     df.index.name = "time"
