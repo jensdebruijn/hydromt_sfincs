@@ -8,7 +8,7 @@ from hydromt.gis_utils import nearest, parse_crs
 from scipy import ndimage
 from scipy.interpolate import interp1d
 from shapely.geometry import LineString, MultiLineString, MultiPoint, Point
-from shapely.ops import linemerge, snap, split, union_all()
+from shapely.ops import linemerge, snap, split, unary_union
 
 logger = logging.getLogger(__name__)
 
